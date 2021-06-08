@@ -1,3 +1,5 @@
+github.com/R2D2Env/go-msgraph v0.0.0-20210608195849-1b75cf549871 h1:TSmMaWoWimuCLMgJ5DAivi+v3T25IPj8aJXaZd0d+Z8=
+github.com/R2D2Env/go-msgraph v0.0.0-20210608195849-1b75cf549871/go.mod h1:dfzD+qQofF6td0s45+mRsXzZirvsns6z50YxAMee6gc=
 github.com/chrj/smtpd v0.3.0 h1:cw1LSHDOz7N3XbkcZSF/bue9dh7ATKk5ZksfBztV6b0=
 github.com/chrj/smtpd v0.3.0/go.mod h1:1hmG9KbrE10JG1SmvG79Krh4F6713oUrw2+gRp1oSYk=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
