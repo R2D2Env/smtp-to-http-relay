@@ -41,6 +41,8 @@ var (
 	remoteAuthStr     = flag.String("remote_auth", "none", "Auth method on outgoing SMTP server (none, plain, login)")
 	remoteAuth        smtp.Auth
 	remoteSender      = flag.String("remote_sender", "", "Sender e-mail address on outgoing SMTP server")
+	apiService        = flag.String("api_service", "", "API service in use")
+	apiCredentialFile = flag.String("api_credential_file", "", "Credential file used to connect to API-based email service")
 	versionInfo       = flag.Bool("version", false, "Show version information")
 )
 
@@ -173,8 +175,8 @@ func ConfigLoad() {
 	// Set up logging as soon as possible
 	setupLogger()
 
-	if *remoteHost == "" && *command == "" {
-		log.Warn("no remote_host or command set; mail will not be forwarded!")
+	if *remoteHost == "" && *command == "" && *apiService == "" {
+		log.Warn("no remote_host or command or api_service set; mail will not be forwarded!")
 	}
 
 	setupAllowedNetworks()

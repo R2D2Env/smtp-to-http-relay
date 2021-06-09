@@ -12,6 +12,7 @@ import (
 	"strings"
 	"syscall"
 
+	msgraph "github.com/R2D2Env/go-msgraph"
 	"github.com/chrj/smtpd"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
@@ -165,12 +166,26 @@ func mailHandler(peer smtpd.Peer, env smtpd.Envelope) error {
 		"uuid": generateUUID(),
 	})
 
-	if *remoteHost == "" && *command == "" {
-		logger.Warning("no remote_host or command set; discarding mail")
+	if *remoteHost == "" && *command == "" && *apiService == "" {
+		logger.Warning("no remote_host or command or api service set; discarding mail")
 		return nil
 	}
 
 	env.AddReceivedLine(peer)
+
+	if *apiService != "" {
+		logger.Infof("delivering mail from peer using %v", *apiService)
+
+		if *apiService == "MicrosoftGraphv1" {
+			// Load in our credential file if it hasn't happened yet
+			if (msgraph.GraphClient{}) == graphClient {
+				InitMSGraph()
+			}
+			GraphRelay(env)
+		} else {
+			logger.Infof("this api is unsupported. skipping.")
+		}
+	}
 
 	if *command != "" {
 		cmdLogger := logger.WithField("command", *command)
