@@ -1,7 +1,7 @@
 module github.com/R2D2E/smtp-to-http-relay
 
 require (
-	github.com/R2D2Env/go-msgraph v0.0.0-20210608195849-1b75cf549871
+	github.com/R2D2Env/go-msgraph v0.0.0-20210609200642-4f6b80bba7d7
 	github.com/chrj/smtpd v0.3.0
 	github.com/google/uuid v1.2.0
 	github.com/sirupsen/logrus v1.8.1
