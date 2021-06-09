@@ -3,7 +3,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/decke/smtprelay)](https://goreportcard.com/report/github.com/decke/smtprelay)
 
 Simple Golang based SMTP relay/proxy server that accepts mail via SMTP
-and forwards it directly to another SMTP server.
+and forwards it directly to another SMTP server, and/or forwards it to Microsoft Graph.
 
 
 ## Why another SMTP server?
@@ -14,10 +14,7 @@ cases. You really don't want to setup and maintain any of those full blown
 kitchensinks yourself because they are complex, fragile and hard to
 configure.
 
-My use case is simple. I need to send automatically generated mails from
-cron via msmtp/sSMTP/dma, mails from various services and network printers
-to GMail without giving away my GMail credentials to each device which
-produces mail.
+Many applications require an SMTP endpoint to configure email notifications, but R2D2E enterprise does not provide a well-supported SMTP endpoint to connect to, instead providing only a Microsoft Graph HTTP endpoint. This application relays incoming SMTP messages to the Microsoft Graph API via the Microsoft Graph /sendMail endpoint and a Microsoft Graph API SDK.
 
 
 ## Main features
@@ -26,6 +23,18 @@ produces mail.
 * Checks for sender, receiver, client IP
 * Authentication support with file (LOGIN, PLAIN)
 * Enforce encryption for authentication
-* Forwards all mail to a smarthost (GMail, MailGun or any other SMTP server)
+* Forwards all mail to:
+    * a smarthost (GMail, MailGun or any other SMTP server)
+    * Microsoft Graph sendMail API
 * Small codebase
 * IPv6 support
+
+## Use
+
+1. Configure your application settings in smtprelay.ini
+2. Run with a `--config` flag. For example, in your source folder:
+
+```sh
+go build .
+./smtprelay --config ./smtpconfig.ini
+```
