@@ -178,7 +178,8 @@ func mailHandler(peer smtpd.Peer, env smtpd.Envelope) error {
 
 		if *apiService == "MicrosoftGraphv1" {
 			// Load in our credential file if it hasn't happened yet
-			if (msgraph.GraphClient{}) == graphClient {
+			//if (msgraph.GraphClient{}) == graphClient {
+      if len(graphClients) == 0 {
 				InitMSGraph()
 			}
 			GraphRelay(env)
