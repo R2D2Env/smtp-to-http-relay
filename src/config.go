@@ -17,33 +17,33 @@ var (
 )
 
 var (
-	logFile           = flag.String("logfile", "", "Path to logfile")
-	logFormat         = flag.String("log_format", "default", "Log output format")
-	logLevel          = flag.String("log_level", "info", "Minimum log level to output")
-	hostName          = flag.String("hostname", "localhost.localdomain", "Server hostname")
-	welcomeMsg        = flag.String("welcome_msg", "", "Welcome message for SMTP session")
-	listenStr         = flag.String("listen", "127.0.0.1:25 [::1]:25", "Address and port to listen for incoming SMTP")
-	listenAddrs       = []protoAddr{}
-	localCert         = flag.String("local_cert", "", "SSL certificate for STARTTLS/TLS")
-	localKey          = flag.String("local_key", "", "SSL private key for STARTTLS/TLS")
-	localForceTLS     = flag.Bool("local_forcetls", false, "Force STARTTLS (needs local_cert and local_key)")
-	allowedNetsStr    = flag.String("allowed_nets", "127.0.0.0/8 ::1/128", "Networks allowed to send mails")
-	allowedNets       = []*net.IPNet{}
-	allowedSenderStr  = flag.String("allowed_sender", "", "Regular expression for valid FROM EMail addresses")
-	allowedSender     *regexp.Regexp
-	allowedRecipStr   = flag.String("allowed_recipients", "", "Regular expression for valid TO EMail addresses")
-	allowedRecipients *regexp.Regexp
-	allowedUsers      = flag.String("allowed_users", "", "Path to file with valid users/passwords")
-	command           = flag.String("command", "", "Path to pipe command")
-	remoteHost        = flag.String("remote_host", "", "Outgoing SMTP server")
-	remoteUser        = flag.String("remote_user", "", "Username for authentication on outgoing SMTP server")
-	remotePass        = flag.String("remote_pass", "", "Password for authentication on outgoing SMTP server")
-	remoteAuthStr     = flag.String("remote_auth", "none", "Auth method on outgoing SMTP server (none, plain, login)")
-	remoteAuth        smtp.Auth
-	remoteSender      = flag.String("remote_sender", "", "Sender e-mail address on outgoing SMTP server")
-  apiService        = flag.String("api_service", "", "API service in use")
+	logFile            = flag.String("logfile", "", "Path to logfile")
+	logFormat          = flag.String("log_format", "default", "Log output format")
+	logLevel           = flag.String("log_level", "info", "Minimum log level to output")
+	hostName           = flag.String("hostname", "localhost.localdomain", "Server hostname")
+	welcomeMsg         = flag.String("welcome_msg", "", "Welcome message for SMTP session")
+	listenStr          = flag.String("listen", "127.0.0.1:25 [::1]:25", "Address and port to listen for incoming SMTP")
+	listenAddrs        = []protoAddr{}
+	localCert          = flag.String("local_cert", "", "SSL certificate for STARTTLS/TLS")
+	localKey           = flag.String("local_key", "", "SSL private key for STARTTLS/TLS")
+	localForceTLS      = flag.Bool("local_forcetls", false, "Force STARTTLS (needs local_cert and local_key)")
+	allowedNetsStr     = flag.String("allowed_nets", "127.0.0.0/8 ::1/128", "Networks allowed to send mails")
+	allowedNets        = []*net.IPNet{}
+	allowedSenderStr   = flag.String("allowed_sender", "", "Regular expression for valid FROM EMail addresses")
+	allowedSender      *regexp.Regexp
+	allowedRecipStr    = flag.String("allowed_recipients", "", "Regular expression for valid TO EMail addresses")
+	allowedRecipients  *regexp.Regexp
+	allowedUsers       = flag.String("allowed_users", "", "Path to file with valid users/passwords")
+	command            = flag.String("command", "", "Path to pipe command")
+	remoteHost         = flag.String("remote_host", "", "Outgoing SMTP server")
+	remoteUser         = flag.String("remote_user", "", "Username for authentication on outgoing SMTP server")
+	remotePass         = flag.String("remote_pass", "", "Password for authentication on outgoing SMTP server")
+	remoteAuthStr      = flag.String("remote_auth", "none", "Auth method on outgoing SMTP server (none, plain, login)")
+	remoteAuth         smtp.Auth
+	remoteSender       = flag.String("remote_sender", "", "Sender e-mail address on outgoing SMTP server")
+	apiService         = flag.String("api_service", "", "API service in use")
 	apiCredentialFiles = flag.String("api_credential_file", "", "Comma seperated list of Credential files used to connect to API-based email service")
-	versionInfo       = flag.Bool("version", false, "Show version information")
+	versionInfo        = flag.Bool("version", false, "Show version information")
 )
 
 func localAuthRequired() bool {
