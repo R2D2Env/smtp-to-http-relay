@@ -12,7 +12,6 @@ import (
 	"strings"
 	"syscall"
 
-	msgraph "github.com/R2D2Env/go-msgraph"
 	"github.com/chrj/smtpd"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"

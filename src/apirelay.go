@@ -11,7 +11,7 @@ import (
   "github.com/chrj/smtpd"
 )
 
-graphClients := make(map[string]msgraph.GraphClient)
+var graphClients map[string]msgraph.GraphClient
 
 type SMTPUser struct {
   address string
@@ -26,20 +26,21 @@ type GraphClientSMTPAuth struct {
 func InitMSGraph() {
   // initialize the GraphClient via JSON-Load.
   // Specify JSON-Fields TenantID, ApplicationID and ClientSecret
-  files := strings.split(*apiCredentialFiles, ",")
-  for _, file in range files {
+  graphClients = make(map[string]msgraph.GraphClient)
+  files := strings.Split(*apiCredentialFiles, ",")
+  for _, file := range files {
     fileContents, err := ioutil.ReadFile(file)
     if err != nil {
       log.WithFields(logrus.Fields{
-        "apiCredentialFile": *apiCredentialFile,
+        "apiCredentialFiles": *apiCredentialFiles,
       }).WithError(err).Warn("could not read api credentials file")
     }
 
     // Unmarshel the file contents into objects
     // use the 0'th sender address in the auth credentials file as the key
     // for the map
-    var smtpmap GraphClientSMTPAuth 
-    var gc msgraph.GraphClient
+    smtpmap := GraphClientSMTPAuth{}
+    gc := msgraph.GraphClient{}
     json.Unmarshal(fileContents, &smtpmap)
     json.Unmarshal(fileContents, &gc)
     graphClients[smtpmap.users[0].address] = gc
@@ -62,6 +63,6 @@ func GraphRelay(env smtpd.Envelope) {
         "Sender":     env.Sender,
         "Recipients": env.Recipients,
         "Body":       string(env.Data),
-      }).WithError(err).Warn("Sender address not mapped to MS Graph account")
+      }).Warn("Sender address not mapped to MS Graph account")
   }
 }
