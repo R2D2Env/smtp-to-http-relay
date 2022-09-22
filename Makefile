@@ -9,7 +9,7 @@
 # 
 compile: 
 	@echo Compile shamilr in docker container
-	@docker build -t shmailr_builder:latest --build-arg http_proxy=$(http_proxy) --build-arg https_proxy=$(https_proxy) --build-arg no_proxy=$(no_proxy) . 
+	docker build -t shmailr_builder:latest --build-arg http_proxy=$(http_proxy) --build-arg https_proxy=$(https_proxy) --build-arg no_proxy=$(no_proxy) . 
 
 fetch:
 	@echo Fetch compiled shmair from compile container 
