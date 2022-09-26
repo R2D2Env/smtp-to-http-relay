@@ -57,6 +57,8 @@ func InitMSGraph() {
 
 func GraphRelay(env smtpd.Envelope) {
 	if gc, ok := graphClients[env.Sender]; ok {
+    fmt.println("%+v\n", env)
+    fmt.Println("%+v\n", gc)
 		if err := gc.SendMailMIME(env.Sender, env.Data); err != nil {
 			log.WithFields(
 				logrus.Fields{
