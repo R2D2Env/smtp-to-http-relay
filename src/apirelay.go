@@ -51,7 +51,7 @@ func InitMSGraph() {
 		json.Unmarshal(fileContents, &smtpmap)
     fmt.Println("%+v\n", smtpmap)
 		json.Unmarshal(fileContents, &gc)
-		graphClients[smtpmap.users[0].address] = gc
+		graphClients[smtpmap.Users[0].address] = gc
 	}
 }
 
