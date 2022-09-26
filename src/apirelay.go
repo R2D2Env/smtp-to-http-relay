@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"strings"
+  "fmt"
 
 	"github.com/sirupsen/logrus"
 
