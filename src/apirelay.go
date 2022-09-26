@@ -30,6 +30,9 @@ func InitMSGraph() {
 	files := strings.Split(*apiCredentialFiles, ",")
 	for _, file := range files {
 		fileContents, err := ioutil.ReadFile(file)
+    log.WithFields(logrus.Fields{
+      "fileContents": fileContents
+    }).Info("File contents"
 		if err != nil {
 			log.WithFields(logrus.Fields{
 				"apiCredentialFiles": *apiCredentialFiles,
@@ -40,8 +43,10 @@ func InitMSGraph() {
 		// use the 0'th sender address in the auth credentials file as the key
 		// for the map
 		smtpmap := GraphClientSMTPAuth{}
+    fmt.println("%+v\n", smtpmap)
 		gc := msgraph.GraphClient{}
 		json.Unmarshal(fileContents, &smtpmap)
+    fmt.println("%+v\n", smtpmap)
 		json.Unmarshal(fileContents, &gc)
 		graphClients[smtpmap.users[0].address] = gc
 	}
