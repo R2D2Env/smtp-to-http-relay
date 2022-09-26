@@ -31,7 +31,7 @@ func InitMSGraph() {
 	for _, file := range files {
 		fileContents, err := ioutil.ReadFile(file)
     log.WithFields(logrus.Fields{
-      "fileContents": fileContents
+      "fileContents": fileContents,
     }).Info("File contents")
 		if err != nil {
 			log.WithFields(logrus.Fields{
