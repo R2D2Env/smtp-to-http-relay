@@ -46,10 +46,8 @@ func InitMSGraph() {
 		// use the 0'th sender address in the auth credentials file as the key
 		// for the map
 		smtpmap := GraphClientSMTPAuth{}
-    fmt.Println("%+v\n", smtpmap)
 		gc := msgraph.GraphClient{}
 		json.Unmarshal(fileContents, &smtpmap)
-    fmt.Println("%+v\n", smtpmap)
 		json.Unmarshal(fileContents, &gc)
 		graphClients[smtpmap.Users[0].Address] = gc
 	}
@@ -57,9 +55,6 @@ func InitMSGraph() {
 
 func GraphRelay(env smtpd.Envelope) {
 	if gc, ok := graphClients[env.Sender]; ok {
-    fmt.Println("%+v\n", graphClients)
-    fmt.Println("%+v\n", env)
-    fmt.Println("%+v\n", gc)
 		if err := gc.SendMailMIME(env.Sender, env.Data); err != nil {
 			log.WithFields(
 				logrus.Fields{
