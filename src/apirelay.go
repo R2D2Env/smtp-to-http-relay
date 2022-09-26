@@ -32,7 +32,7 @@ func InitMSGraph() {
 	files := strings.Split(*apiCredentialFiles, ",")
 	for _, file := range files {
 		fileContents, err := os.ReadFile(file)
-    fc := newString(fileContents)
+    fc := new String(fileContents)
     log.WithFields(logrus.Fields{
       "fileContents": fc,
     }).Info("File contents")
