@@ -16,13 +16,13 @@ import (
 var graphClients map[string]msgraph.GraphClient
 
 type SMTPUser struct {
-	address    string
-	hashedpass string
-	username   string
+  Address    string `json: "address"`
+  Hashedpass string `json: "hashedpass"`
+  Username   string `json: "username"`
 }
 
 type GraphClientSMTPAuth struct {
-	users []SMTPUser
+  Users []SMTPUser `json: "users"`
 }
 
 func InitMSGraph() {
