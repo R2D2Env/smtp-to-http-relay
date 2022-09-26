@@ -2,10 +2,8 @@ package main
 
 import (
 	"encoding/json"
-  "fmt"
 	"strings"
   "os"
-	//"io/ioutil"
 
 	"github.com/sirupsen/logrus"
 
