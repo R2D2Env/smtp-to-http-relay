@@ -42,7 +42,7 @@ var (
 	remoteAuth         smtp.Auth
 	remoteSender       = flag.String("remote_sender", "", "Sender e-mail address on outgoing SMTP server")
 	apiService         = flag.String("api_service", "", "API service in use")
-	apiCredentialFiles = flag.String("api_credential_file", "", "Comma seperated list of Credential files used to connect to API-based email service")
+	apiCredentialFiles = flag.String("api_credential_files", "", "Comma seperated list of Credential files used to connect to API-based email service")
 	versionInfo        = flag.Bool("version", false, "Show version information")
 )
 
