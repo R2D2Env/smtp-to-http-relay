@@ -2,9 +2,10 @@ package main
 
 import (
 	"encoding/json"
-	"io/ioutil"
-	"strings"
   "fmt"
+	"strings"
+  "os"
+	//"io/ioutil"
 
 	"github.com/sirupsen/logrus"
 
@@ -30,9 +31,9 @@ func InitMSGraph() {
 	graphClients = make(map[string]msgraph.GraphClient)
 	files := strings.Split(*apiCredentialFiles, ",")
 	for _, file := range files {
-		fileContents, err := ioutil.ReadFile(file)
+		fileContents, err := os.ReadFile(file)
     log.WithFields(logrus.Fields{
-      "fileContents": fileContents,
+      "fileContents": new String(fileContents),
     }).Info("File contents")
 		if err != nil {
 			log.WithFields(logrus.Fields{
