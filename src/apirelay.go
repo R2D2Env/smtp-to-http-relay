@@ -32,7 +32,7 @@ func InitMSGraph() {
 		fileContents, err := ioutil.ReadFile(file)
     log.WithFields(logrus.Fields{
       "fileContents": fileContents
-    }).Info("File contents"
+    }).Info("File contents")
 		if err != nil {
 			log.WithFields(logrus.Fields{
 				"apiCredentialFiles": *apiCredentialFiles,
