@@ -204,7 +204,7 @@ func mailHandler(peer smtpd.Peer, env smtpd.Envelope) error {
             return tmpBody, qpErr
           }
 
-          emailMsg.header["Content-Transfer-Encoding"][0] = "binary"
+          emailMsg.Header["Content-Transfer-Encoding"][0] = "binary"
           return qp, nil
         } else if tmpCTE == "base64" {
           log.Info("Base64 message detected. Decoding...")
@@ -219,7 +219,7 @@ func mailHandler(peer smtpd.Peer, env smtpd.Envelope) error {
             return bodyBytes, b64Err
           }
 
-          emailMsg.header["Content-Transfer-Encoding"][0] = "binary"
+          emailMsg.Header["Content-Transfer-Encoding"][0] = "binary"
           return b64body, nil
         }
         tmpBody, bodyErr := io.ReadAll(emailMsg.Body)
