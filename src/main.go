@@ -3,8 +3,12 @@ package main
 import (
 	"bytes"
 	"crypto/tls"
+  b64 "encoding/base64"
 	"fmt"
+  "mime/quotedprintable"
+  "io"
 	"net"
+  "net/mail"
 	"net/textproto"
 	"os"
 	"os/exec"
@@ -157,18 +161,89 @@ func mailHandler(peer smtpd.Peer, env smtpd.Envelope) error {
 		peerIP = addr.IP.String()
 	}
 
+  log.WithFields(logrus.Fields{
+		"from": env.Sender,
+		"to":   env.Recipients,
+		"peer": peerIP,
+		"host": *remoteHost,
+		"uuid": generateUUID(),
+    "Data": string(env.Data),
+  }).Debug("Recevied message")
+
 	logger := log.WithFields(logrus.Fields{
 		"from": env.Sender,
 		"to":   env.Recipients,
 		"peer": peerIP,
 		"host": *remoteHost,
 		"uuid": generateUUID(),
+    "Data": string(env.Data),
 	})
 
 	if *remoteHost == "" && *command == "" && *apiService == "" {
 		logger.Warning("no remote_host or command or api service set; discarding mail")
 		return nil
 	}
+
+  emailMsg, emailMsgErr := mail.ReadMessage(bytes.NewReader(env.Data))
+  if emailMsgErr != nil {
+    logger.Warning("Error parsing email. Eamil may not be decoded properly.")
+  } else {
+    cte := emailMsg.Header.Get("Content-Transfer-Encoding");
+
+    if cte != "" {
+      // Always retrurns decoded data or origional data.
+      // If and error is returned then decoding failed but origional content returned
+      decodedBody, decodeErr := func() ([]byte, error) {
+        tmpCTE := strings.ToLower(cte)
+        if tmpCTE == "quoted-printable" {
+          log.Info("Quoted Printable message detected. Decoding...")
+
+          qp, qpErr := io.ReadAll(quotedprintable.NewReader(emailMsg.Body))
+          if qpErr != nil {
+            tmpBody, _ := io.ReadAll(emailMsg.Body)
+            return tmpBody, qpErr
+          }
+
+          emailMsg.Header["Content-Transfer-Encoding"][0] = "binary"
+          return qp, nil
+        } else if tmpCTE == "base64" {
+          log.Info("Base64 message detected. Decoding...")
+
+          bodyBytes, bodyBytesErr := io.ReadAll(emailMsg.Body)
+          if bodyBytesErr != nil {
+            return bodyBytes, bodyBytesErr
+          }
+
+          b64body, b64Err := b64.StdEncoding.DecodeString(string(bodyBytes))
+          if b64Err != nil {
+            return bodyBytes, b64Err
+          }
+
+          emailMsg.Header["Content-Transfer-Encoding"][0] = "binary"
+          return b64body, nil
+        }
+        tmpBody, bodyErr := io.ReadAll(emailMsg.Body)
+        return tmpBody, bodyErr
+      }()
+      if decodeErr != nil {
+        log.WithFields(logrus.Fields{
+          "Body": decodedBody,
+          "Error": decodeErr,
+        }).Error("There was an error decoding message body. Continuing without decoding")
+      }
+
+      // Rebuild envelope Data with decoded body
+      buf := ""
+      for k, vl := range emailMsg.Header {
+        for _, v := range vl  {
+          buf = buf + k +":  " + v + "\r\n"
+        }
+      }
+      // Add in line seperrator for body content
+      buf = buf + "\r\n"
+      env.Data = []byte(buf+string(decodedBody))
+    }
+  }
 
 	env.AddReceivedLine(peer)
 
