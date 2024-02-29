@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"strings"
   "os"
+  "sync"
 
 	"github.com/sirupsen/logrus"
 
@@ -12,6 +13,7 @@ import (
 )
 
 var graphClients map[string]msgraph.GraphClient
+var gcmu sync.Mutex
 
 type SMTPUser struct {
   Address    string `json: "address"`
@@ -26,25 +28,32 @@ type GraphClientSMTPAuth struct {
 func InitMSGraph() {
 	// initialize the GraphClient via JSON-Load.
 	// Specify JSON-Fields TenantID, ApplicationID and ClientSecret
-	graphClients = make(map[string]msgraph.GraphClient)
-	files := strings.Split(*apiCredentialFiles, ",")
-	for _, file := range files {
-		fileContents, err := os.ReadFile(file)
-		if err != nil {
-			log.WithFields(logrus.Fields{
-				"apiCredentialFiles": *apiCredentialFiles,
-			}).WithError(err).Warn("could not read api credentials file")
-		}
+  // Adding a Mutext to solve concurrency errors. This will work
+  // as long as the number of graphClient files are small
+  // and parse quicly
+  gcmu.Lock()
+  if graphClients == nil {
+	  graphClients = make(map[string]msgraph.GraphClient)
+	  files := strings.Split(*apiCredentialFiles, ",")
+	  for _, file := range files {
+	  	fileContents, err := os.ReadFile(file)
+	  	if err != nil {
+	  		log.WithFields(logrus.Fields{
+	  			"apiCredentialFiles": *apiCredentialFiles,
+	  		}).WithError(err).Warn("could not read api credentials file")
+	  	}
 
-		// Unmarshel the file contents into objects
-		// use the 0'th sender address in the auth credentials file as the key
-		// for the map
-		smtpmap := GraphClientSMTPAuth{}
-		gc := msgraph.GraphClient{}
-		json.Unmarshal(fileContents, &smtpmap)
-		json.Unmarshal(fileContents, &gc)
-		graphClients[smtpmap.Users[0].Address] = gc
-	}
+	  	// Unmarshel the file contents into objects
+	  	// use the 0'th sender address in the auth credentials file as the key
+	  	// for the map
+	  	smtpmap := GraphClientSMTPAuth{}
+	  	gc := msgraph.GraphClient{}
+	  	json.Unmarshal(fileContents, &smtpmap)
+	  	json.Unmarshal(fileContents, &gc)
+	  	graphClients[smtpmap.Users[0].Address] = gc
+	  }
+  }
+  gcmu.Unlock()
 }
 
 func GraphRelay(env smtpd.Envelope) {

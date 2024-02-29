@@ -249,11 +249,6 @@ func mailHandler(peer smtpd.Peer, env smtpd.Envelope) error {
 		logger.Infof("delivering mail from peer using %v", *apiService)
 
 		if *apiService == "MicrosoftGraphv1" {
-			// Load in our credential file if it hasn't happened yet
-			//if (msgraph.GraphClient{}) == graphClient {
-			if len(graphClients) == 0 {
-				InitMSGraph()
-			}
 			GraphRelay(env)
 		} else {
 			logger.Infof("this api is unsupported. skipping.")
@@ -380,6 +375,7 @@ func getTLSConfig() *tls.Config {
 
 func main() {
 	ConfigLoad()
+	InitMSGraph()
 
 	if *versionInfo {
 		fmt.Printf("smtprelay/%s (%s)\n", appVersion, buildTime)

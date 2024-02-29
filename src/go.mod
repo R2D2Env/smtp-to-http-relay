@@ -7,7 +7,8 @@ require (
 	github.com/sirupsen/logrus v1.9.0
 	github.com/vharitonsky/iniflags v0.0.0-20180513140207-a33cd0b5f3de
 	golang.org/x/crypto v0.0.0-20220829220503-c86fa9a7ed90
-	golang.org/x/sys v0.0.0-20220908164124-27713097b956 // indirect
 )
+
+require golang.org/x/sys v0.0.0-20220908164124-27713097b956 // indirect
 
 go 1.19
